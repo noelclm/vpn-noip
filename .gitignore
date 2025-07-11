@@ -1,0 +1,13 @@
+.idea/
+client-configs/
+openvpn-data/
+ddns-config/config.json
+ddns-config/updates.json
+.env
+.env.local
+.env.production
+.env.staging
+.env.development
+*.ovpn
+*.conf
+*.bak

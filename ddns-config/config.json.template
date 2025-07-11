@@ -1,0 +1,11 @@
+{
+  "settings": [
+    {
+      "provider": "noip",
+      "domain": "${NOIP_DOMAIN}",
+      "username": "${NOIP_USERNAME}",
+      "password": "${NOIP_PASSWORD}",
+      "ip_version": "ipv4"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+services:
+  openvpn:
+    image: kylemanna/openvpn:latest
+    container_name: openvpn-server
+    ports:
+      - "${OVPN_PORT}:${OVPN_PORT}/${OVPN_PROTOCOL}"
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./openvpn-data:/etc/openvpn
+    environment:
+      - OVPN_SERVER_URL=${OVPN_PROTOCOL}://${OVPN_DOMAIN}:${OVPN_PORT}
+      - OVPN_CIPHER=${OVPN_CIPHER}
+      - OVPN_TLS_CIPHER=${OVPN_TLS_CIPHER}
+      - OVPN_AUTH=${OVPN_AUTH}
+      - OVPN_COMP_LZO=${OVPN_COMP_LZO}
+      - OVPN_ENABLE_COMPRESSION=${OVPN_ENABLE_COMPRESSION}
+      - OVPN_DH=${OVPN_DH}
+    networks:
+      - vpn-network
+
+  ddns-updater:
+    image: qmcgaw/ddns-updater:latest
+    container_name: ddns-updater
+    restart: unless-stopped
+    ports:
+      - "${DDNS_PORT}:${DDNS_PORT}"
+    volumes:
+      - ./ddns-config:/updater/data
+    environment:
+      - PERIOD=${DDNS_UPDATE_PERIOD}
+      - UPDATE_COOLDOWN_PERIOD=${DDNS_COOLDOWN_PERIOD}
+      - PUBLICIP_FETCHERS=${DDNS_IP_FETCHERS}
+      - PUBLICIP_HTTP_PROVIDERS=${DDNS_IP_PROVIDERS}
+    networks:
+      - vpn-network
+
+networks:
+  vpn-network:
+    driver: bridge
